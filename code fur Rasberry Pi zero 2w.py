@@ -16,7 +16,7 @@ PARAM1 = 52
 PARAM2 = 28
 MIN_RADIUS = 1
 MAX_RADIUS = 30
-#   текст (не обязателен, можем вырезать(?), а также в detect_circles())
+#   текст 
 font = cv2.FONT_HERSHEY_SIMPLEX
 org = (70, 70)
 fontScale = 1
@@ -41,7 +41,7 @@ def input_callback(channel):
 GPIO.add_event_detect(A, GPIO.RISING, callback=input_callback, bouncetime=200)
 
 def detect_circles(cap, frames=FRAMES_FOR_DETECTION):
-    """для каждого из framse кадров считаем кружки, усредняем, возврощаем"""
+    """для каждого из frames кадров считаем кружки, усредняем, возвращаем"""
     averager = []
     last_image_for_display = None
     for i in range(frames):
@@ -50,7 +50,7 @@ def detect_circles(cap, frames=FRAMES_FOR_DETECTION):
         if not ret:
             time.sleep(0.1)
             continue
-        image = cv2.flip(img, 1) # олег сделай бекфлип пж
+        image = cv2.flip(img, 1) 
         last_image_for_display = image.copy()
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         gray_blured = cv2.blur(gray, (3, 3))
@@ -68,14 +68,14 @@ def detect_circles(cap, frames=FRAMES_FOR_DETECTION):
     else: average = round(sum(averager) / len(averager))
     if average < 1: average = 1
     if average > 6: average = 6
-    # текст (не обязателен, можем вырезать(?))
+    # текст 
     if last_image_for_display is not None:
         cv2.putText(image, str(average), org, font, fontScale, color, thickness, cv2.LINE_AA)
         cv2.rectangle(image, (60, 40), (100, 80), color, thickness)
         cv2.imshow("Detected Circle", image)
     return average
 
-def pulse_output(count, duration=1.0): # пульсирование очка
+def pulse_output(count, duration=1.0): 
     """count импульсов: B -> HIGH на короткое время, затем LOW"""
     global busy
     busy = True
@@ -136,4 +136,5 @@ def main_loop():
         cv2.destroyAllWindows()
 if __name__ == "__main__":
     try: main_loop()
+
     finally: GPIO.cleanup()
